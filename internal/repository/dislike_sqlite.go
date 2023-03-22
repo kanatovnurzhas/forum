@@ -18,7 +18,7 @@ func NewDislikeRepo(db *sql.DB) *DislikeRepo {
 }
 
 func (r *DislikeRepo) SetPostDislike(like models.DisLike) error {
-	query = `INSERT INTO dislike(user_id, post_id, active) VALUES($1, $2, $3)`
+	query := `INSERT INTO dislike(user_id, post_id, active) VALUES($1, $2, $3)`
 	_, err := r.db.Exec(query, like.UserID, like.PostID, 1)
 	if err != nil {
 		return fmt.Errorf(path+"set post dislike: %w", err)
@@ -27,7 +27,7 @@ func (r *DislikeRepo) SetPostDislike(like models.DisLike) error {
 }
 
 func (r *DislikeRepo) CheckPostLike(userID, postID int) error {
-	query = `SELECT id FROM like WHERE user_id = $1 AND post_id = $2 AND active = 1`
+	query := `SELECT id FROM like WHERE user_id = $1 AND post_id = $2 AND active = 1`
 	row := r.db.QueryRow(query, userID, postID)
 	var likeID int
 	if err := row.Scan(&likeID); err != nil {
@@ -37,7 +37,7 @@ func (r *DislikeRepo) CheckPostLike(userID, postID int) error {
 }
 
 func (r *DislikeRepo) CheckPostDislike(userID, postID int) error {
-	query = `SELECT id FROM dislike WHERE user_id = $1 AND post_id = $2 AND active = 1`
+	query := `SELECT id FROM dislike WHERE user_id = $1 AND post_id = $2 AND active = 1`
 	row := r.db.QueryRow(query, userID, postID)
 	var dislikeID int
 	if err := row.Scan(&dislikeID); err != nil {
@@ -47,7 +47,7 @@ func (r *DislikeRepo) CheckPostDislike(userID, postID int) error {
 }
 
 func (r *DislikeRepo) DeletePostLike(userID, postID int) error {
-	query = `DELETE FROM like WHERE user_id = $1 AND post_id = $2`
+	query := `DELETE FROM like WHERE user_id = $1 AND post_id = $2`
 	_, err := r.db.Exec(query, userID, postID)
 	if err != nil {
 		return fmt.Errorf(path+"delete post like: %w", err)
@@ -56,7 +56,7 @@ func (r *DislikeRepo) DeletePostLike(userID, postID int) error {
 }
 
 func (r *DislikeRepo) DeletePostDislike(userID, postID int) error {
-	query = `DELETE FROM dislike WHERE user_id = $1 AND post_id = $2`
+	query := `DELETE FROM dislike WHERE user_id = $1 AND post_id = $2`
 	_, err := r.db.Exec(query, userID, postID)
 	if err != nil {
 		return fmt.Errorf(path+"delete post dislike: %w", err)
@@ -65,7 +65,7 @@ func (r *DislikeRepo) DeletePostDislike(userID, postID int) error {
 }
 
 func (r *DislikeRepo) UpdatePostVote(postID int) error {
-	query = `SELECT COUNT(post_id) FROM like WHERE post_id = $1 AND active = $2`
+	query := `SELECT COUNT(post_id) FROM like WHERE post_id = $1 AND active = $2`
 	row := r.db.QueryRow(query, postID, 1)
 	var likesCount int
 	if err := row.Scan(&likesCount); err != nil {
@@ -88,7 +88,7 @@ func (r *DislikeRepo) UpdatePostVote(postID int) error {
 //------------------------------Comment---------------------------------//
 
 func (r *DislikeRepo) SetCommentDislike(like models.DisLike) error {
-	query = `INSERT INTO dislike(user_id, comment_id, active) VALUES($1, $2, $3)`
+	query := `INSERT INTO dislike(user_id, comment_id, active) VALUES($1, $2, $3)`
 	_, err := r.db.Exec(query, like.UserID, like.CommentID, 1)
 	if err != nil {
 		return fmt.Errorf(path+"set post dislike: %w", err)
@@ -97,7 +97,7 @@ func (r *DislikeRepo) SetCommentDislike(like models.DisLike) error {
 }
 
 func (r *DislikeRepo) CheckCommentLike(userID, commentID int) error {
-	query = `SELECT id FROM like WHERE user_id = $1 AND comment_id AND active = 1`
+	query := `SELECT id FROM like WHERE user_id = $1 AND comment_id AND active = 1`
 	row := r.db.QueryRow(query, userID, commentID)
 	var likeID int
 	if err := row.Scan(&likeID); err != nil {
@@ -107,7 +107,7 @@ func (r *DislikeRepo) CheckCommentLike(userID, commentID int) error {
 }
 
 func (r *DislikeRepo) CheckCommentDislike(userID, commentID int) error {
-	query = `SELECT id FROM dislike WHERE user_id = $1 AND comment_id = $2 AND active = 1`
+	query := `SELECT id FROM dislike WHERE user_id = $1 AND comment_id = $2 AND active = 1`
 	row := r.db.QueryRow(query, userID, commentID)
 	var dislikeID int
 	if err := row.Scan(&dislikeID); err != nil {
@@ -117,7 +117,7 @@ func (r *DislikeRepo) CheckCommentDislike(userID, commentID int) error {
 }
 
 func (r *DislikeRepo) DeleteCommentLike(userID, commentID int) error {
-	query = `DELETE FROM like WHERE user_id = $1 AND comment_id = $2`
+	query := `DELETE FROM like WHERE user_id = $1 AND comment_id = $2`
 	_, err := r.db.Exec(query, userID, commentID)
 	if err != nil {
 		return fmt.Errorf(path+"delete post like: %w", err)
@@ -126,7 +126,7 @@ func (r *DislikeRepo) DeleteCommentLike(userID, commentID int) error {
 }
 
 func (r *DislikeRepo) DeleteCommentDislike(userID, commentID int) error {
-	query = `DELETE FROM dislike WHERE user_id = $1 AND comment_id = $2`
+	query := `DELETE FROM dislike WHERE user_id = $1 AND comment_id = $2`
 	_, err := r.db.Exec(query, userID, commentID)
 	if err != nil {
 		return fmt.Errorf(path+"delete post dislike: %w", err)
@@ -135,7 +135,7 @@ func (r *DislikeRepo) DeleteCommentDislike(userID, commentID int) error {
 }
 
 func (r *DislikeRepo) UpdateCommentVote(commentID int) error {
-	query = `SELECT COUNT(id) FROM like WHERE comment_id = $1 AND active = $2`
+	query := `SELECT COUNT(id) FROM like WHERE comment_id = $1 AND active = $2`
 	row := r.db.QueryRow(query, commentID, 1)
 	var likesCount int
 	if err := row.Scan(&likesCount); err != nil {

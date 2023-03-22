@@ -20,7 +20,7 @@ func NewAuthRepo(db *sql.DB) *AuthRepo {
 }
 
 func (r *AuthRepo) CreateUser(user models.User) error {
-	query := "INSERT INTO user (email, username, password) VALUES ($1, $2, $3)"
+	query := `INSERT INTO user (email, username, password) VALUES ($1, $2, $3)`
 	_, err := r.db.Exec(query, user.Email, user.Username, user.Password)
 	if err != nil {
 		log.Printf("repo: create user: %s", err)
@@ -51,7 +51,7 @@ func (r *AuthRepo) GetUserByUsername(username string) (models.User, error) {
 
 func (r *AuthRepo) GetUserByToken(token string) (models.User, error) {
 	var user models.User
-	query := "SELECT * FROM user WHERE token=$1"
+	query := `SELECT * FROM user WHERE token=$1`
 	row := r.db.QueryRow(query, token)
 	err := row.Scan(&user.ID, &user.Email, &user.Username, &user.Password, &user.Token, &user.TokenDuration)
 	if err != nil {

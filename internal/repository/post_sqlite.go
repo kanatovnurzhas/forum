@@ -34,6 +34,7 @@ func (r *PostRepo) CreatePost(post *models.Post) error {
 
 func (r *PostRepo) GetAllPost() (*[]models.Post, error) {
 	rows, err = r.db.Query(`SELECT * FROM post ORDER BY id DESC`)
+	defer rows.Close()
 	if err != nil {
 		return nil, fmt.Errorf(path+"get all post: %w", err)
 	}
@@ -51,6 +52,7 @@ func (r *PostRepo) GetAllPost() (*[]models.Post, error) {
 
 func (r *PostRepo) GetPostByCategory(category string) (*[]models.Post, error) {
 	rows, err = r.db.Query(`SELECT * FROM post WHERE category LIKE '%` + category + `%'` + `ORDER BY id DESC`)
+	defer rows.Close()
 	if err != nil {
 		log.Printf("by category: %s", err)
 		return nil, fmt.Errorf(path+"get all post: %w", err)
@@ -69,6 +71,7 @@ func (r *PostRepo) GetPostByCategory(category string) (*[]models.Post, error) {
 
 func (r *PostRepo) MyPosts(id string) (*[]models.Post, error) {
 	rows, err = r.db.Query(`SELECT * FROM post WHERE author_id=` + id + ` ORDER BY id DESC`)
+	defer rows.Close()
 	if err != nil {
 		return nil, fmt.Errorf(path+"get my post: %w", err)
 	}
@@ -84,8 +87,9 @@ func (r *PostRepo) MyPosts(id string) (*[]models.Post, error) {
 }
 
 func (r *PostRepo) MyFavourites(id int) (*[]models.Post, error) {
-	query = `SELECT post_id FROM like WHERE user_id=$1 AND post_id != 0 AND active=1 ORDER BY id DESC`
+	query := `SELECT post_id FROM like WHERE user_id=$1 AND post_id != 0 AND active=1 ORDER BY id DESC`
 	rows, err = r.db.Query(query, id)
+	defer rows.Close()
 	if err != nil {
 		log.Printf("my favourites query: %s\n", err)
 		return nil, fmt.Errorf(path+"select my favourites: %w", err)
@@ -114,6 +118,7 @@ func (r *PostRepo) MyFavourites(id int) (*[]models.Post, error) {
 
 func (r *PostRepo) GetPostByID(id string) (*models.Post, error) {
 	rows, err := r.db.Query(`SELECT * FROM post WHERE id=` + id)
+	defer rows.Close()
 	if err != nil {
 		return nil, fmt.Errorf(path+"get post by id: %w", err)
 	}

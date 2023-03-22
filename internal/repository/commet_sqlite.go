@@ -30,6 +30,7 @@ func (r *CommentRepo) CreateComment(comment models.Comment) error {
 func (r *CommentRepo) GetCommentByPostID(id int) (*[]models.Comment, error) {
 	query := `SELECT * FROM comment WHERE post_id =$1`
 	rows, err := r.db.Query(query, id)
+	defer rows.Close()
 	if err != nil {
 		return nil, fmt.Errorf(path+"get post comment: %w", err)
 	}
