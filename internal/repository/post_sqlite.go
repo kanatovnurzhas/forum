@@ -32,7 +32,7 @@ func (r *PostRepo) CreatePost(post *models.Post) error {
 	return nil
 }
 
-func (r *PostRepo) GetAllPost() (*[]models.Post, error) {
+func (r *PostRepo) GetAllPost() ([]models.Post, error) {
 	rows, err = r.db.Query(`SELECT * FROM post ORDER BY id DESC`)
 	defer rows.Close()
 	if err != nil {
@@ -47,10 +47,10 @@ func (r *PostRepo) GetAllPost() (*[]models.Post, error) {
 		post.Category = " " + post.Category
 		posts = append(posts, *post)
 	}
-	return &posts, nil
+	return posts, nil
 }
 
-func (r *PostRepo) GetPostByCategory(category string) (*[]models.Post, error) {
+func (r *PostRepo) GetPostByCategory(category string) ([]models.Post, error) {
 	rows, err = r.db.Query(`SELECT * FROM post WHERE category LIKE '%` + category + `%'` + `ORDER BY id DESC`)
 	defer rows.Close()
 	if err != nil {
@@ -66,10 +66,10 @@ func (r *PostRepo) GetPostByCategory(category string) (*[]models.Post, error) {
 		}
 		posts = append(posts, *post)
 	}
-	return &posts, nil
+	return posts, nil
 }
 
-func (r *PostRepo) MyPosts(id string) (*[]models.Post, error) {
+func (r *PostRepo) MyPosts(id string) ([]models.Post, error) {
 	rows, err = r.db.Query(`SELECT * FROM post WHERE author_id=` + id + ` ORDER BY id DESC`)
 	defer rows.Close()
 	if err != nil {
@@ -83,10 +83,10 @@ func (r *PostRepo) MyPosts(id string) (*[]models.Post, error) {
 		}
 		posts = append(posts, *post)
 	}
-	return &posts, nil
+	return posts, nil
 }
 
-func (r *PostRepo) MyFavourites(id int) (*[]models.Post, error) {
+func (r *PostRepo) MyFavourites(id int) ([]models.Post, error) {
 	query := `SELECT post_id FROM like WHERE user_id=$1 AND post_id != 0 AND active=1 ORDER BY id DESC`
 	rows, err = r.db.Query(query, id)
 	defer rows.Close()
@@ -113,20 +113,20 @@ func (r *PostRepo) MyFavourites(id int) (*[]models.Post, error) {
 		}
 		posts = append(posts, *post)
 	}
-	return &posts, nil
+	return posts, nil
 }
 
-func (r *PostRepo) GetPostByID(id string) (*models.Post, error) {
+func (r *PostRepo) GetPostByID(id string) (models.Post, error) {
 	rows, err := r.db.Query(`SELECT * FROM post WHERE id=` + id)
 	defer rows.Close()
-	if err != nil {
-		return nil, fmt.Errorf(path+"get post by id: %w", err)
-	}
 	var post models.Post
+	if err != nil {
+		return post, fmt.Errorf(path+"get post by id: %w", err)
+	}
 	for rows.Next() {
 		if err := rows.Scan(&post.ID, &post.AuthorID, &post.Likes, &post.Dislikes, &post.Title, &post.Category, &post.Content, &post.Author, &post.Date); err != nil {
-			return nil, fmt.Errorf(path+"get post by id: scan: %w", err)
+			return post, fmt.Errorf(path+"get post by id: scan: %w", err)
 		}
 	}
-	return &post, nil
+	return post, nil
 }

@@ -27,7 +27,7 @@ func (r *CommentRepo) CreateComment(comment models.Comment) error {
 	return nil
 }
 
-func (r *CommentRepo) GetCommentByPostID(id int) (*[]models.Comment, error) {
+func (r *CommentRepo) GetCommentByPostID(id int) ([]models.Comment, error) {
 	query := `SELECT * FROM comment WHERE post_id =$1`
 	rows, err := r.db.Query(query, id)
 	defer rows.Close()
@@ -43,5 +43,5 @@ func (r *CommentRepo) GetCommentByPostID(id int) (*[]models.Comment, error) {
 		}
 		comments = append(comments, comment)
 	}
-	return &comments, nil
+	return comments, nil
 }
